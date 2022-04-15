@@ -35,7 +35,7 @@ func (r *repository) CreateBook(book *entities.Book) (*entities.Book, error) {
 	book.ID = primitive.NewObjectID()
 	book.CreatedAt = time.Now()
 	book.UpdatedAt = time.Now()
-	_, err := r.Collection.InsertOne(context.Background(), book)
+	_, err := r.Database.Collection("").InsertOne(context.Background(), book)
 	if err != nil {
 		return nil, err
 	}
