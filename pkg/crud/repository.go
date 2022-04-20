@@ -12,9 +12,10 @@ import (
 
 //Repository interface allows us to access the CRUD Operations in mongo here.
 type Repository interface {
-	FindOne(filter interface{}, opts *options.FindOneOptions) (*interface{}, error)
-	Find(filter interface{}, opts *options.FindOptions) (*[]interface{}, error)
+	FindOne(collection string, filter interface{}, opts *options.FindOneOptions) (*interface{}, error)
+	Find(collection string, filter interface{}, opts *options.FindOptions) (*[]interface{}, error)
 	FindParameters(id string) (*entities.CrudParameter, error)
+	DeleteMany(collection string, filter interface{}, opts *options.DeleteOptions) (*interface{}, error)
 }
 type repository struct {
 	Database *mongo.Database
@@ -28,8 +29,8 @@ func NewRepo(database *mongo.Database) Repository {
 }
 
 // 
-func (r *repository) FindOne(filter interface{}, opts *options.FindOneOptions) (*interface{}, error) {
-	result := r.Database.Collection("").FindOne(context.Background(), filter, opts)
+func (r *repository) FindOne(collection string, filter interface{}, opts *options.FindOneOptions) (*interface{}, error) {
+	result := r.Database.Collection(collection).FindOne(context.Background(), filter, opts)
 	var data interface{}
 	err := result.Err()
 	if err != nil {
@@ -39,9 +40,9 @@ func (r *repository) FindOne(filter interface{}, opts *options.FindOneOptions) (
 	return &data, nil
 }
 
-func (r *repository) Find(filter interface{}, opts *options.FindOptions) (*[]interface{}, error) {
+func (r *repository) Find(collection string, filter interface{}, opts *options.FindOptions) (*[]interface{}, error) {
 	var data []interface{}
-	cursor, err := r.Database.Collection("").Find(context.Background(), filter, opts)
+	cursor, err := r.Database.Collection(collection).Find(context.Background(), filter, opts)
 	if err != nil {
 		return nil, err
 	}
@@ -64,4 +65,8 @@ func (r *repository) FindParameters(id string) (*entities.CrudParameter, error) 
 		return nil, err
 	}
 	return &data, nil
+}
+
+func (r *repository) DeleteMany(collection string, filter interface{}, opts *options.DeleteOptions) (*interface{}, error) {
+	r.Database.Collection()
 }

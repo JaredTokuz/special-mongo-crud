@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"errors"
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
@@ -9,15 +8,11 @@ import (
 	"github.com/jaredtokuz/mongo-crud/pkg/crud"
 )
 
-
 func FindOne(service crud.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
+		collection := c.Params("collection")
 		id := c.Params("id")
-		if id == "" {
-			c.Status(http.StatusBadRequest)
-			return c.JSON(presenter.ErrorResponse(errors.New("path missing id"))) 
-		}
-		result, err := service.FindOne(id) 
+		result, err := service.FindOne(collection, id) 
 		if err != nil {
 			c.Status(http.StatusInternalServerError)
 			return c.JSON(presenter.ErrorResponse(err)) 
@@ -28,12 +23,9 @@ func FindOne(service crud.Service) fiber.Handler {
 
 func FindMany(service crud.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
+		collection := c.Params("collection")
 		id := c.Params("id")
-		if id == "" {
-			c.Status(http.StatusBadRequest)
-			return c.JSON(presenter.ErrorResponse(errors.New("path missing id"))) 
-		}
-		result, err := service.Find(id) 
+		result, err := service.Find(collection, id) 
 		if err != nil {
 			c.Status(http.StatusInternalServerError)
 			return c.JSON(presenter.ErrorResponse(err)) 
@@ -44,6 +36,14 @@ func FindMany(service crud.Service) fiber.Handler {
 
 func Expire(service crud.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-
+		collection := c.Params("collection")
+		field := c.Params("field")
+		days := c.Params("days")
+		result, err := service.ExpireDocs(collection, field, days) 
+		if err != nil {
+			c.Status(http.StatusInternalServerError)
+			return c.JSON(presenter.ErrorResponse(err)) 
+		}
+		return c.JSON(presenter.SuccessResponse(result)) 
 	}
 }

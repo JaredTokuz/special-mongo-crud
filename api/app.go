@@ -31,8 +31,8 @@ func main() {
 	app.Get("/", func(ctx *fiber.Ctx) error {
 		return ctx.Send([]byte("Welcome to the clean-architecture mongo book shop!"))
 	})
-	find := app.Group("/find")
-	routes.BookRouter(find, findService)
+	crudOps := app.Group("/:collection")
+	routes.BookRouter(crudOps, findService)
 
 	defer cancel()
 	log.Fatal(app.Listen(":8080"))
