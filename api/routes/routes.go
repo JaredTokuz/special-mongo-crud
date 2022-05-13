@@ -7,14 +7,15 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// BookRouter is the Router for GoFiber App
+// TODO Combine into one
 func FindRouter(app fiber.Router, service crud.Service) {
 	app.Get("/many/:id", handlers.FindMany(service))
 	app.Get("/one/:id", handlers.FindOne(service))
 }
 
 func DeleteRouter(app fiber.Router, service crud.Service) {
-	app.Delete("/expire/:days", handlers.Expire(service)) 
+	app.Delete("/expire/:fieldName/:days", handlers.Expire(service))
+	app.Delete("/shave/:count", handlers.Shave(service))
 	app.Delete("/many", handlers.DeleteMany(service))
 	app.Delete("/one", handlers.DeleteOne(service))
 }
