@@ -7,7 +7,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// TODO Combine into one
 func FindRouter(app fiber.Router, service crud.Service) {
 	app.Get("/many/:id", handlers.FindMany(service))
 	app.Get("/one/:id", handlers.FindOne(service))
@@ -21,8 +20,12 @@ func DeleteRouter(app fiber.Router, service crud.Service) {
 }
 
 func UpdateRouter(app fiber.Router, service crud.Service) {
-	app.Put("/many", handlers.UpdateMany(service))
-	app.Put("/one", handlers.UpdateOne(service))
+	app.Put("/many/rename/:current/:new", handlers.UpdateMany(service))
+	app.Put("/many/unset/:field", handlers.UpdateMany(service))
+	app.Put("/many/set/:field/:value", handlers.UpdateMany(service))
+	app.Put("/one/rename/:current/:new", handlers.UpdateOne(service))
+	app.Put("/one/unset/:field", handlers.UpdateOne(service))
+	app.Put("/one/set/:field/:value", handlers.UpdateOne(service))
 }
 
 func InsertRouter(app fiber.Router, service crud.Service) {

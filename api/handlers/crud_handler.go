@@ -11,7 +11,6 @@ import (
 	"github.com/jaredtokuz/mongo-crud/pkg/crud"
 )
 
-
 func FindOne(service crud.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		id := c.Params("id")
